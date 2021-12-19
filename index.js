@@ -2,6 +2,8 @@ const { text } = require('body-parser');
 const express = require('express')
 const app = express()
 const path = require('path');
+const { v4: uuid } = require('uuid');
+uuid();
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '/views'))
@@ -12,22 +14,22 @@ app.use(express.json());
 
 const comments = [
     {
-        id: 1,
+        id: uuid(),
         username: 'Todd',
         comment: 'lol, that is funny.'
     },
     {
-        id: 2,
+        id: uuid(),
         username: 'Sophi',
         comment: 'I dont like that.'
     },
     {
-        id: 3,
+        id: uuid(),
         username: 'Philly-D',
         comment: 'Take them birds.'
     },
     {   
-        id: 4,
+        id: uuid(),
         username: 'ApolloSolo',
         comment: 'Do the, you know, the thing.'
     },
@@ -47,14 +49,14 @@ res.render('comments/new')
 //post form data to show all comments page
 app.post('/comments', (req, res) => {
     const {username, comment} = req.body; //destructure the data to get variables
-    comments.push({ username, comment }) //push those var datas into our array, which updates the list
+    comments.push({ username, comment, id: uuid() }) //push those var datas into our array, which updates the list
     res.redirect('/comments') // send you back to comments once form is submitted.
 }) 
 
 //Show single comment using an id
 app.get('/comments/:id', (req, res) => {
     const { id } = req.params; //pull out the value of the :id variable
-    const comment = comments.find( c => c.id === parseInt(id)); //Find the comment in the array that matched the id.
+    const comment = comments.find( c => c.id === id); //Find the comment in the array that matched the id.
     res.render('comments/show', { comment });
 })
 
