@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const path = require('path');
 const { v4: uuid } = require('uuid');
+const methodOverride = require('method-override');
 uuid();
 
 app.set('view engine', 'ejs')
@@ -11,6 +12,8 @@ app.set('views', path.join(__dirname, '/views'))
 app.use(express.urlencoded({ extended : true}));
 //this will parse json
 app.use(express.json());
+//allows us to us PATCH
+app.use(methodOverride('_method'));
 
 const comments = [
     {
@@ -46,7 +49,7 @@ app.get('/comments/new', (req, res) => {
 res.render('comments/new')
 })
 
-//post form data to show all comments page
+//post form data to show on all comments page
 app.post('/comments', (req, res) => {
     const {username, comment} = req.body; //destructure the data to get variables
     comments.push({ username, comment, id: uuid() }) //push those var datas into our array, which updates the list
@@ -59,6 +62,23 @@ app.get('/comments/:id', (req, res) => {
     const comment = comments.find( c => c.id === id); //Find the comment in the array that matched the id.
     res.render('comments/show', { comment });
 })
+
+
+//edit comment
+app.patch('/comments/:id', (req, res) => {
+    const { id } = req.params; //get the id value from the url
+    const newCommentText = req.body.comment; //Take whatever was sent in the request body
+    const foundComment = comments.find( c => c.id === id); //Find comment associated with the id
+    foundComment.comment = newCommentText; //change that found comment to what was in the req body data
+    res.redirect('/comments');
+})
+
+//route to edit form - not working
+app.get('/comments/:id/edit', (req, res) => {
+    const { id } = req.params; 
+    const comment = comments.find( c => c.id === id);//find the comment object accosiated with url id
+    res.render('comments/edit', { comment }); 
+    })
 
 
 

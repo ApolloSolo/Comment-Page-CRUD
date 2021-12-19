@@ -7,17 +7,27 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Show Comment</title>
+        <title>Edit Comments</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
     </head>
     <body>
-        <h1>This is <%= comment.username %>'s post</h1>
-        <p><%= comment.comment %></p>
+        <h1>Edit a Comment</h1>
 
-        <a href="/comments">Back</a>
-        <a href="/comments/<%= comment.id %>/edit">Edit</a>
+        <form action="/comments/<%=comment.id%>?_method=PATCH" method="POST">
+            <section>
+                <label for="comment">Your Comment</label>
+                <br>
+                <textarea name="comment" id="comment" placeholder="Comment:">
+                    <%= comment.comment %>
+                </textarea>
+            </section>
+            <button>Submit</button>
+        </form>
+
+        <a href="/comments">All Comments</a>
+        
         <script src="" async defer></script>
     </body>
 </html>
